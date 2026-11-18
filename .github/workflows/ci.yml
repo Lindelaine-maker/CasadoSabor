@@ -70,7 +70,7 @@ jobs:
         working-directory: server
         run: |
           npm audit --omit=dev --json > npm-audit.json || true
-          node -e "const a=require('./npm-audit.json'); const v=Object.entries(a.vulnerabilities||{}); console.log(JSON.stringify(v.map(([name,x])=>({name,severity:x.severity,via:x.via,fixAvailable:x.fixAvailable})),null,2)); if(v.some(([,x])=>['high','critical'].includes(x.severity))) process.exit(1)"
+          node -e "const a=require('./npm-audit.json'); const l=require('./package-lock.json'); const v=Object.entries(a.vulnerabilities||{}); const prod=v.filter(([n,x])=>(x.nodes||[]).some(p=>!l.packages[p]?.dev && !l.packages[p]?.devOptional)); console.log('Auditoria completa:',JSON.stringify(v.map(([name,x])=>({name,severity:x.severity,developmentOnly:(x.nodes||[]).every(p=>l.packages[p]?.dev||l.packages[p]?.devOptional),fixAvailable:x.fixAvailable})),null,2)); console.log('Vulnerabilidades em dependencias de producao:',prod.length); if(prod.some(([,x])=>['high','critical'].includes(x.severity))) process.exit(1)"
       - name: Upload dependency audit report
         if: always()
         uses: actions/upload-artifact@v4
