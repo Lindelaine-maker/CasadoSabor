@@ -12,7 +12,7 @@
     "db:deploy": "prisma migrate deploy"
   },
   "dependencies": {
-    "@prisma/client": "latest",
+    "@prisma/client": "6.19.0",
     "cors": "latest",
     "dotenv": "latest",
     "express": "latest",
@@ -21,6 +21,6 @@
     "zod": "latest"
   },
   "devDependencies": {
-    "prisma": "latest"
+    "prisma": "6.19.0"
   }
 }
