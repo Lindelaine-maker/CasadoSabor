@@ -22,6 +22,7 @@ Node.js 20+ e PostgreSQL.
    npx prisma generate
    npx prisma migrate dev --name init
    npm run seed
+   npm test
    npm run dev
    ```
 4. Em outro terminal:
@@ -33,7 +34,7 @@ Node.js 20+ e PostgreSQL.
    ```
 5. Abra o endereço informado pelo Vite (normalmente http://localhost:5173).
 
-A API inicia em http://localhost:3333 e disponibiliza `GET /api/health`. O cardápio pode ser consultado publicamente; para criar, editar ou excluir categorias e pratos, entre em **Acesso administrativo** na interface usando `ADMIN_USERNAME` e `ADMIN_PASSWORD` configurados no servidor. O login é feito em `POST /api/auth/login`, retorna um token JWT com validade de 8 horas e limita tentativas de autenticação.
+Execute `npm test` dentro de `server` para rodar os testes automatizados de autenticação.\n\nA API inicia em http://localhost:3333 e disponibiliza `GET /api/health`. O cardápio pode ser consultado publicamente; para criar, editar ou excluir categorias e pratos, entre em **Acesso administrativo** na interface usando `ADMIN_USERNAME` e `ADMIN_PASSWORD` configurados no servidor. O login é feito em `POST /api/auth/login`, retorna um token JWT com validade de 8 horas e limita tentativas de autenticação.
 
 ## Endpoints
 - `POST /api/auth/login` (autenticação administrativa)
