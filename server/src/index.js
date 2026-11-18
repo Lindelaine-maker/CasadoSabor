@@ -10,7 +10,7 @@ import { notFound, errorHandler } from './middleware.js';
 
 const app = express();
 app.use(helmet());
-app.use(cors({origin: process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : 'http://localhost:5173'}));
+app.use(cors({origin: process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(origin => origin.trim()) : 'http://localhost:5173'}));
 app.use(express.json({limit:'20kb'}));
 app.use('/api', rateLimit({windowMs:15*60*1000,limit:300,standardHeaders:true,legacyHeaders:false}));
 app.get('/api/health',(req,res)=>res.json({status:'ok',service:'Casa do Sabor API'}));
