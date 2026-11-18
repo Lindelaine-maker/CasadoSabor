@@ -16,7 +16,7 @@ export function requireAdmin(req, res, next) {
     return res.status(401).json({ message: 'Faça login para realizar esta operação.' });
   }
   try {
-    req.admin = jwt.verify(token, secret, { algorithms: ['HS256'] });
+    req.admin = jwt.verify(token, secret, { algorithms: ['HS256'], issuer: 'casa-do-sabor-api', audience: 'casa-do-sabor-admin' });
     return next();
   } catch {
     return res.status(401).json({ message: 'Sessão inválida ou expirada. Entre novamente.' });
