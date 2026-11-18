@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import { createHash, timingSafeEqual } from 'node:crypto';
 
 function safeEqual(left, right) {
   const a = createHash('sha256').update(String(left ?? '')).digest();
@@ -17,6 +16,7 @@ export function requireAdmin(req, res, next) {
   }
   try {
     req.admin = jwt.verify(token, secret, { algorithms: ['HS256'], issuer: 'casa-do-sabor-api', audience: 'casa-do-sabor-admin' });
+    if (req.admin.role !== 'admin') return res.status(403).json({ message: 'Acesso administrativo necessário.' });
     return next();
   } catch {
     return res.status(401).json({ message: 'Sessão inválida ou expirada. Entre novamente.' });
