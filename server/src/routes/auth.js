@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { createHash, timingSafeEqual } from 'node:crypto';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
+import rateLimit from 'express-rate-limit';
 
 const router = Router();
 const loginSchema = z.object({
@@ -15,7 +16,9 @@ function safeEqual(left, right) {
   return timingSafeEqual(a, b);
 }
 
-router.post('/login', (req, res) => {
+const loginLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 10, standardHeaders: true, legacyHeaders: false, message: { message: 'Muitas tentativas. Aguarde 15 minutos e tente novamente.' } });
+
+router.post('/login', loginLimiter, (req, res) => {
   const parsed = loginSchema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ message: 'Informe usuário e senha.' });
 
@@ -23,7 +26,7 @@ router.post('/login', (req, res) => {
   const expectedUsername = process.env.ADMIN_USERNAME;
   const expectedPassword = process.env.ADMIN_PASSWORD;
   const secret = process.env.JWT_SECRET;
-  if (!expectedUsername || !expectedPassword || !secret) {
+  if (!expectedUsername || !expectedPassword || !secret || secret.length < 32) {
     return res.status(503).json({ message: 'Login administrativo ainda não foi configurado no servidor.' });
   }
   if (!safeEqual(username, expectedUsername) || !safeEqual(password, expectedPassword)) {
