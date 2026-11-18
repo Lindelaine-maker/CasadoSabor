@@ -32,7 +32,12 @@ export default function App() {
     if (next) await loadDishes(next.id); else setDishes([]);
   }
   async function loadDishes(id) { setDishes(await api.dishes(id)); }
-  useEffect(() => { loadCategories().catch(e => setError(e.message)).finally(() => setLoading(false)); }, []);
+  useEffect(() => {
+    loadCategories().catch(e => setError(e.message)).finally(() => setLoading(false));
+    const onExpired = () => setIsAdmin(false);
+    window.addEventListener('admin-session-expired', onExpired);
+    return () => window.removeEventListener('admin-session-expired', onExpired);
+  }, []);
   const visibleDishes = useMemo(() => dishes.filter(d => `${d.name} ${d.description || ''}`.toLowerCase().includes(search.toLowerCase())), [dishes, search]);
 
   async function loginAdmin(e) {
