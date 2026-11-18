@@ -45,7 +45,16 @@ jobs:
         run: npm install
       - name: Audit production API dependencies
         working-directory: server
-        run: npm audit --omit=dev --audit-level=high
+        run: |
+          npm audit --omit=dev --json > npm-audit.json || true
+          node -e "const a=require('./npm-audit.json'); const v=Object.entries(a.vulnerabilities||{}); console.log(JSON.stringify(v.map(([name,x])=>({name,severity:x.severity,via:x.via,fixAvailable:x.fixAvailable})),null,2)); if(v.some(([,x])=>['high','critical'].includes(x.severity))) process.exit(1)"
+      - name: Upload dependency audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-audit-report
+          path: server/npm-audit.json
+          if-no-files-found: ignore
       - name: Validate Prisma schema and generate client
         working-directory: server
         run: |
