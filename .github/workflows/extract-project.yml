@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - 'Casa_do_Sabor_Projeto.zip'
       - '.github/workflows/extract-project.yml'
   workflow_dispatch:
 
@@ -16,7 +17,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Extract project archive
         run: |
           test -f Casa_do_Sabor_Projeto.zip
@@ -24,10 +24,6 @@ jobs:
           unzip -oq Casa_do_Sabor_Projeto.zip -d /tmp/casa-do-sabor
           test -d /tmp/casa-do-sabor/casa-do-sabor
           cp -a /tmp/casa-do-sabor/casa-do-sabor/. .
-          git status --short
-
-      - name: Commit extracted source
-        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .gitignore README.md client server
