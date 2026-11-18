@@ -1,11 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-function safeEqual(left, right) {
-  const a = createHash('sha256').update(String(left ?? '')).digest();
-  const b = createHash('sha256').update(String(right ?? '')).digest();
-  return timingSafeEqual(a, b);
-}
-
 export function requireAdmin(req, res, next) {
   const secret = process.env.JWT_SECRET;
   if (!secret) return res.status(503).json({ message: 'Autenticação administrativa não configurada no servidor.' });
