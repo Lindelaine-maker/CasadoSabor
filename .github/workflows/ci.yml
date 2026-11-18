@@ -10,6 +10,8 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/casa_sabor
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -22,8 +24,6 @@ jobs:
         run: npm install
       - name: Validate Prisma schema and generate client
         working-directory: server
-        env:
-          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/casa_sabor
         run: |
           npx prisma validate
           npx prisma generate
