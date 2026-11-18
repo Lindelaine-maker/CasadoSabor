@@ -17,6 +17,20 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: casa_sabor
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d casa_sabor"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/casa_sabor
     steps:
@@ -31,12 +45,14 @@ jobs:
         run: npm install
       - name: Audit production API dependencies
         working-directory: server
-        run: npm audit --omit=dev --audit-level=critical
+        run: npm audit --omit=dev --audit-level=high
       - name: Validate Prisma schema and generate client
         working-directory: server
         run: |
           npx prisma validate
           npx prisma generate
+          npx prisma migrate deploy
+          npm run seed
       - name: Check API JavaScript syntax
         working-directory: server
         run: |
@@ -44,6 +60,9 @@ jobs:
       - name: Run API authentication tests
         working-directory: server
         run: npm test
+      - name: Run PostgreSQL CRUD smoke test
+        working-directory: server
+        run: npm run test:db
       - name: Install frontend dependencies
         working-directory: client
         run: npm install
