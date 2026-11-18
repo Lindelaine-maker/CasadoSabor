@@ -13,7 +13,10 @@ async function request(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, { ...options, headers });
   const payload = response.status === 204 ? null : await response.json().catch(() => ({}));
   if (!response.ok) {
-    if (response.status === 401 && adminToken) {\n      setAdminToken('');\n      window.dispatchEvent(new Event('admin-session-expired'));\n    }
+    if (response.status === 401 && adminToken) {
+      setAdminToken('');
+      window.dispatchEvent(new Event('admin-session-expired'));
+    }
     throw new Error(payload?.message || 'Não foi possível concluir a operação.');
   }
   return payload;
