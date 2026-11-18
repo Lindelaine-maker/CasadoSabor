@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { prisma } from '../prisma.js';
 import { categorySchema, dishSchema } from '../validators.js';
+import { requireAdmin } from '../auth.js';
 const router = Router();
 
 router.get('/', async (req,res) => {
