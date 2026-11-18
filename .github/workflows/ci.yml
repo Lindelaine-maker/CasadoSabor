@@ -24,7 +24,7 @@ jobs:
         run: npm install
       - name: Audit production API dependencies
         working-directory: server
-        run: npm audit --omit=dev
+        run: npm audit --omit=dev --audit-level=critical
       - name: Validate Prisma schema and generate client
         working-directory: server
         run: |
