@@ -62,7 +62,7 @@ jobs:
         run: npm run test:db
       - name: Install frontend dependencies
         working-directory: client
-        run: npm install
+        run: npm ci
       - name: Build frontend
         working-directory: client
         run: npm run build
