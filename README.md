@@ -1,79 +1,194 @@
 # Casa do Sabor — Cardápio Digital
 
-Projeto acadêmico — N695 Desenvolvimento de Plataformas Web — Cenário 3.
+Projeto acadêmico da disciplina **N695 — Desenvolvimento de Plataformas Web (Cenário 3)**.
 
-## Stack
-- Front-end: React + Vite
-- API: Node.js + Express
-- Persistência: PostgreSQL + Prisma ORM
-- Validação: Zod
-- Segurança: Helmet, CORS configurável, validação Zod, limitação de requisições e autenticação administrativa JWT
+O Casa do Sabor é uma aplicação web de cardápio digital. O público pode consultar as categorias e os pratos disponíveis; a administração autenticada pode cadastrar, consultar, editar e excluir categorias e pratos.
 
-## Requisitos
-Node.js 22+ e PostgreSQL.
+## Aplicação publicada
 
-## Executar localmente
-1. Crie um banco PostgreSQL.
-2. Copie `server/.env.example` para `server/.env` e configure `DATABASE_URL`, `ADMIN_USERNAME`, `ADMIN_PASSWORD` e `JWT_SECRET` (segredo aleatório com pelo menos 32 caracteres). Nunca publique o arquivo `.env`.
-3. No terminal:
-   ```bash
-   cd server
-   npm ci
-   npx prisma generate
-   npx prisma migrate dev --name init
-   npm run seed
-   npm test
-   npm run test:db
-   npm run dev
-   ```
-4. Em outro terminal:
-   ```bash
-   cd client
-   npm ci
-   cp .env.example .env
-   npm run dev
-   ```
-5. Abra o endereço informado pelo Vite (normalmente http://localhost:5173).
+- **Cardápio:** https://casa-do-sabor-web.onrender.com
+- **API:** https://casa-do-sabor-api-qc80.onrender.com
+- **Verificação da API:** https://casa-do-sabor-api-qc80.onrender.com/api/health
 
-A API inicia em http://localhost:3333 e disponibiliza `GET /api/health`. O cardápio pode ser consultado publicamente; para criar, editar ou excluir categorias e pratos, entre em **Acesso administrativo** na interface usando `ADMIN_USERNAME` e `ADMIN_PASSWORD` configurados no servidor. O login é feito em `POST /api/auth/login`, retorna um token JWT com validade de 8 horas e limita tentativas de autenticação.
+> A disponibilidade dos serviços depende do provedor de hospedagem. Em planos gratuitos, o primeiro acesso após um período sem uso pode levar alguns instantes.
 
-## Testes
-- `npm test`: testes automatizados da autenticação administrativa.
-- `npm run test:db`: teste de integração CRUD com PostgreSQL; exige `DATABASE_URL` configurada e banco acessível.
-- O GitHub Actions executa validação do Prisma, migrações, seed, testes, build do front-end e auditoria de dependências.
+## Tecnologias
 
-## Endpoints
-- `POST /api/auth/login` (autenticação administrativa)
-- `GET/POST /api/categories`
-- `GET/PUT/DELETE /api/categories/:id`
-- `GET/POST /api/categories/:categoryId/dishes`
-- `GET/PUT/DELETE /api/dishes/:id`
+- **Front-end:** React 19 e Vite 6
+- **API:** Node.js 22 e Express 5
+- **Banco de dados:** PostgreSQL
+- **ORM e migrações:** Prisma 6
+- **Validação:** Zod
+- **Segurança:** Helmet, CORS configurável, limitação de requisições e autenticação administrativa com JWT
+- **Hospedagem:** Render
+- **Integração contínua:** GitHub Actions
 
-A exclusão de categoria com pratos é bloqueada (HTTP 409). Nomes de categorias são únicos e preços devem ser maiores que zero.
+## Funcionalidades
 
-## Publicação
+- Consulta pública do cardápio por categorias e pratos.
+- Login para acesso administrativo.
+- Cadastro, edição e exclusão de categorias.
+- Cadastro, edição e exclusão de pratos.
+- Proteção das rotas administrativas por token JWT.
+- Validação dos dados recebidos pela API.
+- Integração com WhatsApp para contato e pedidos.
+
+**Regras de negócio:** nomes de categorias são únicos, os preços devem ser maiores que zero e a exclusão de uma categoria que ainda possui pratos é bloqueada pela API (HTTP 409).
+
+## Requisitos para execução local
+
+- Node.js 22 ou superior.
+- npm.
+- PostgreSQL em execução e um banco criado para o projeto.
+
+## Configuração e execução local
+
+### 1. Configurar a API
+
+No terminal, a partir da pasta raiz do repositório:
+
+**Windows (PowerShell):**
+
+```powershell
+Copy-Item server/.env.example server/.env
+```
+
+**Linux/macOS:**
+
+```bash
+cp server/.env.example server/.env
+```
+
+Edite `server/.env` e informe os dados do PostgreSQL e credenciais administrativas próprias:
+
+- `DATABASE_URL`: endereço de conexão do banco PostgreSQL.
+- `PORT`: porta da API (localmente, o padrão é `3333`).
+- `CLIENT_URL`: endereço do front-end local, normalmente `http://localhost:5173`.
+- `ADMIN_USERNAME` e `ADMIN_PASSWORD`: usuário e senha administrativos.
+- `JWT_SECRET`: segredo aleatório com pelo menos 32 caracteres.
+
+Não publique o arquivo `.env`, senhas ou segredos no GitHub.
+
+Instale as dependências, gere o cliente Prisma, aplique as migrações, carregue os dados demonstrativos e execute os testes:
+
+```bash
+cd server
+npm ci
+npx prisma generate
+npx prisma migrate dev --name init
+npm run seed
+npm test
+npm run test:db
+npm run dev
+```
+
+O teste de integração `npm run test:db` exige que o PostgreSQL esteja acessível e que `DATABASE_URL` esteja configurada.
+
+A API ficará disponível em `http://localhost:3333` e o endpoint de saúde em `http://localhost:3333/api/health`.
+
+### 2. Configurar o front-end
+
+Em outro terminal, a partir da pasta raiz:
+
+**Windows (PowerShell):**
+
+```powershell
+Copy-Item client/.env.example client/.env
+```
+
+**Linux/macOS:**
+
+```bash
+cp client/.env.example client/.env
+```
+
+O arquivo `client/.env` deve apontar para a API local:
+
+```env
+VITE_API_URL=http://localhost:3333/api
+```
+
+Instale as dependências e inicie o Vite:
+
+```bash
+cd client
+npm ci
+npm run dev
+```
+
+Abra o endereço exibido pelo Vite (normalmente http://localhost:5173).
+
+## Autenticação administrativa
+
+O acesso administrativo é feito pela própria interface do cardápio. As credenciais são definidas no ambiente da API por meio de `ADMIN_USERNAME` e `ADMIN_PASSWORD`; não há credenciais padrão que devam ser publicadas neste repositório.
+
+A autenticação utiliza `POST /api/auth/login`. Em caso de sucesso, a API retorna um token JWT com validade de 8 horas. As rotas de administração exigem esse token.
+
+## Endpoints principais
+
+| Método | Endpoint | Descrição |
+|---|---|---|
+| POST | `/api/auth/login` | Autenticação administrativa |
+| GET / POST | `/api/categories` | Listar e criar categorias |
+| GET / PUT / DELETE | `/api/categories/:id` | Consultar, editar e excluir categoria |
+| GET / POST | `/api/categories/:categoryId/dishes` | Listar e criar pratos de uma categoria |
+| GET / PUT / DELETE | `/api/dishes/:id` | Consultar, editar e excluir prato |
+| GET | `/api/health` | Verificar a saúde da API |
+
+## Testes e integração contínua
+
+Na API:
+
+- `npm test`: executa os testes automatizados de autenticação.
+- `npm run test:db`: executa o teste de integração CRUD com PostgreSQL.
+
+O workflow do GitHub Actions, em `.github/workflows/ci.yml`, executa no Node.js 22 a validação e geração do Prisma, migrações e seed, verificação de sintaxe JavaScript, testes da API, teste CRUD com PostgreSQL, build do front-end e auditoria das dependências de produção.
+
+## Publicação no Render
+
+A configuração de infraestrutura está no arquivo `render.yaml`.
+
 ### Banco de dados
-Crie um PostgreSQL gerenciado e configure a variável `DATABASE_URL` no serviço da API. Use a URL de conexão fornecida pelo provedor e habilite SSL conforme exigido por ele.
+
+O Blueprint define um banco PostgreSQL. A variável `DATABASE_URL` da API é vinculada à connection string desse banco.
 
 ### API
-- Diretório raiz do serviço: `server`.
-- Comando de build: `npm ci && npx prisma generate && npx prisma migrate deploy`.
-- Comando de inicialização: `npm start`.
-- Variáveis obrigatórias: `DATABASE_URL`, `CLIENT_URL`, `ADMIN_USERNAME`, `ADMIN_PASSWORD` e `JWT_SECRET`.
-- `PORT` pode ser definido pelo provedor; a aplicação usa a porta disponibilizada no ambiente ou 3333.
-- Gere `JWT_SECRET` aleatório com pelo menos 32 caracteres. Não reutilize exemplos e não coloque segredos no GitHub.
 
-Após a primeira publicação da API, teste `GET /api/health`. Execute `npm run seed` uma única vez se quiser carregar os dados demonstrativos do cardápio; esse comando usa upsert para categorias e evita duplicar pratos já existentes.
+- **Root Directory:** `server`
+- **Build Command:** `npm ci && npx prisma generate && npx prisma migrate deploy && npm run seed`
+- **Start Command:** `npm start`
+- **Health Check Path:** `/api/health`
+
+Variáveis de ambiente necessárias:
+
+- `DATABASE_URL`
+- `CLIENT_URL` — domínio público do front-end.
+- `ADMIN_USERNAME`
+- `ADMIN_PASSWORD`
+- `JWT_SECRET` — segredo aleatório forte, com pelo menos 32 caracteres.
+
+O Render fornece a variável `PORT`; a aplicação também possui a porta local padrão `3333`. O comando de build aplica as migrações e executa o seed. O seed utiliza operações idempotentes para carregar os dados demonstrativos.
 
 ### Front-end
-- Diretório raiz do serviço estático: `client`.
-- Comando de build: `npm ci && npm run build`.
-- Diretório de publicação: `dist`.
-- Variável de build: `VITE_API_URL`, definida como a URL pública da API seguida de `/api`.
 
-Configure `CLIENT_URL` na API com o domínio público do front-end. Se houver mais de uma origem autorizada, separe-as por vírgula.
+- **Root Directory:** `client`
+- **Build Command:** `npm ci && npm run build`
+- **Publish Directory:** `dist`
+- **Variável de build:** `VITE_API_URL`, com a URL pública da API terminada em `/api`.
 
-Antes da entrega, substitua os links de exemplo no relatório pelos endereços reais e faça testes na versão publicada.
+O Render está configurado para redirecionar rotas do front-end para `index.html`, permitindo o funcionamento da aplicação.
 
-## Evidências acadêmicas
-O relatório PDF está na pasta principal. Inclua capturas reais das telas e de requisições/respostas após executar e publicar o projeto. Complete nome, matrícula, turma e links antes do envio.
+Após a publicação, verifique o endpoint `/api/health`, abra o cardápio e teste o fluxo administrativo e as operações de cadastro, edição e exclusão.
+
+## Entrega acadêmica
+
+O relatório do projeto está disponível em PDF na pasta raiz do repositório. Antes do envio acadêmico:
+
+1. Confira se nome, matrícula e turma estão preenchidos corretamente no relatório.
+2. Inclua evidências reais da aplicação publicada e, quando solicitado, das requisições e respostas da API.
+3. Revise os links do repositório e da aplicação.
+4. Não inclua senhas, tokens, arquivos `.env` ou outros segredos nas evidências.
+
+## Repositório
+
+https://github.com/Lindelaine-maker/CasadoSabor
