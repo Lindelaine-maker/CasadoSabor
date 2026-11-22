@@ -1,3 +1,9 @@
+databases:
+  - name: casa-do-sabor-db
+    plan: free
+    databaseName: casa_do_sabor
+    user: casa_do_sabor
+
 services:
   - type: web
     name: casa-do-sabor-api
@@ -9,12 +15,29 @@ services:
     healthCheckPath: /api/health
     envVars:
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: casa-do-sabor-db
+          property: connectionString
       - key: CLIENT_URL
-        sync: false
+        value: https://casa-do-sabor-web.onrender.com
       - key: ADMIN_USERNAME
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
       - key: JWT_SECRET
         sync: false
+
+  - type: web
+    name: casa-do-sabor-web
+    runtime: static
+    plan: free
+    rootDir: client
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://casa-do-sabor-api.onrender.com/api
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
