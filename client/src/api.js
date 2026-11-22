@@ -1,10 +1,21 @@
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3333/api';
-let adminToken = sessionStorage.getItem('casaDoSaborAdminToken') || '';
+
+function readStoredToken() {
+  try { return window.sessionStorage.getItem('casaDoSaborAdminToken') || ''; }
+  catch { return ''; }
+}
+function writeStoredToken(token) {
+  try {
+    if (token) window.sessionStorage.setItem('casaDoSaborAdminToken', token);
+    else window.sessionStorage.removeItem('casaDoSaborAdminToken');
+  } catch { /* O cardápio público continua funcionando sem armazenamento local. */ }
+}
+
+let adminToken = readStoredToken();
 
 export function setAdminToken(token) {
   adminToken = token || '';
-  if (adminToken) sessionStorage.setItem('casaDoSaborAdminToken', adminToken);
-  else sessionStorage.removeItem('casaDoSaborAdminToken');
+  writeStoredToken(adminToken);
 }
 
 async function request(path, options = {}) {
