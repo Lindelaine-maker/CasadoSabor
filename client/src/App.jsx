@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { api, setAdminToken } from './api';
-import { ChefHat, Plus, Pencil, Trash2, Utensils, Tags, Search, X, Leaf, Flame, Clock3 } from 'lucide-react';
+import { ChefHat, Plus, Pencil, Trash2, Utensils, Tags, Search, X, Leaf, Flame, Clock3, MessageCircle } from 'lucide-react';
 
 const money = (value) => Number(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
@@ -79,10 +79,12 @@ export default function App() {
     try { await api.deleteDish(dish.id); await loadDishes(selected.id); } catch (e) { alert(e.message); }
   }
 
+  const whatsappUrl = 'https://wa.me/5588981562234?text=Olá!%20Vim%20pelo%20cardápio%20da%20Casa%20do%20Sabor%20e%20gostaria%20de%20fazer%20um%20pedido.';
+
   return <div className="app-shell">
     <header className="topbar"><a className="brand" href="#"><span className="brand-mark"><ChefHat size={23}/></span><span>casa do <b>sabor.</b><small>COMIDA FEITA COM CARINHO</small></span></a><div className="top-actions"><span className="top-tag">CARDÁPIO DIGITAL</span>{isAdmin ? <button className="outline-btn" onClick={logoutAdmin}>Sair do painel</button> : <button className="outline-btn" onClick={() => {setError("");setModal("login");}}>Acesso administrativo</button>}</div></header>
     <main>
-      <section className="hero"><div className="hero-copy"><span className="eyebrow">SABOR DE COMIDA DE CASA</span><h1>Seu dia merece<br/><em>comida de verdade.</em></h1><p>Receitas preparadas com carinho, ingredientes frescos e aquele tempero que abraça.</p><div className="hero-points"><span><Leaf size={16}/> Ingredientes frescos</span><span><Flame size={16}/> Feito na hora</span><span><Clock3 size={16}/> Todo dia, com carinho</span></div></div><div className="hero-image"><div className="image-note">FEITO COM AMOR <span>♥</span></div></div></section>
+      <section className="hero"><div className="hero-copy"><span className="eyebrow">SABOR DE COMIDA DE CASA</span><h1>Seu dia merece<br/><em>comida de verdade.</em></h1><p>Receitas preparadas com carinho, ingredientes frescos e aquele tempero que abraça.</p><div className="hero-points"><span><Leaf size={16}/> Ingredientes frescos</span><span><Flame size={16}/> Feito na hora</span><span><Clock3 size={16}/> Todo dia, com carinho</span></div></div><div className="hero-image"><div className="image-note">FEITO COM AMOR <span>♥</span></div><a className="whatsapp-cta" href={whatsappUrl} target="_blank" rel="noopener noreferrer"><MessageCircle size={18}/> Pedir pelo WhatsApp</a></div></section>
       <section className="menu-section">
         <div className="section-heading"><div><span className="eyebrow">ESCOLHA SEU FAVORITO</span><h2>Nosso cardápio</h2><p>Um menu cheio de sabor esperando por você.</p></div>{isAdmin && <div className="admin-actions"><button className="outline-btn" onClick={() => openCategory(null)}><Plus size={16}/> Nova categoria</button></div>}</div>
         <div className="menu-layout">
@@ -94,6 +96,7 @@ export default function App() {
         </div>
       </section>
     </main>
+    <a className="whatsapp-float" href={whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="Fazer pedido pelo WhatsApp"><MessageCircle size={25}/><span>Peça pelo WhatsApp</span></a>
     <footer><div className="footer-brand"><ChefHat size={20}/> Casa do Sabor</div><span>Comida de verdade, feita com carinho. © {new Date().getFullYear()}</span><span className="footer-admin">Painel de cardápio</span></footer>
     {modal==='login' && <Modal title="Acesso administrativo" onClose={()=>setModal(null)}><form onSubmit={loginAdmin} className="form"><p className="login-hint">Entre com as credenciais configuradas no servidor para gerenciar o cardápio.</p><label>Usuário<input autoFocus required autoComplete="username" value={loginForm.username} onChange={e=>setLoginForm({...loginForm,username:e.target.value})}/></label><label>Senha<input required type="password" autoComplete="current-password" value={loginForm.password} onChange={e=>setLoginForm({...loginForm,password:e.target.value})}/></label>{error&&<p className="form-error">{error}</p>}<button className="primary-btn full">Entrar</button></form></Modal>}
     {isAdmin && modal==='category' && <Modal title={editingId?'Editar categoria':'Nova categoria'} onClose={()=>setModal(null)}><form onSubmit={saveCategory} className="form"><label>Nome da categoria<input autoFocus required maxLength="60" value={categoryName} onChange={e=>setCategoryName(e.target.value)} placeholder="Ex.: Pratos feitos"/></label>{error&&<p className="form-error">{error}</p>}<button className="primary-btn full">Salvar categoria</button></form></Modal>}
