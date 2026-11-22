@@ -1,6 +1,7 @@
 databases:
   - name: casa-do-sabor-db
     plan: free
+    region: singapore
     databaseName: casa_do_sabor
     user: casa_do_sabor
 
