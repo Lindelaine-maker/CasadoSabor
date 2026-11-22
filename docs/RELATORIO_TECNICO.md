@@ -75,9 +75,7 @@ O workflow de CI cobre:
 6. Build de produção do front-end.
 7. Auditoria das dependências de produção.
 
-**Última evidência de CI registrada na revisão anterior:** execução #107, conclusão Success, commit `143aa1969cbceb7ef582a675084052f08becf7fd`.
-
-A revisão documental posterior iniciou a execução #112, commit `d81076918d647fb2927adf3677a804939c4aaeaf`; o estado deve ser conferido em [GitHub Actions](https://github.com/Lindelaine-maker/CasadoSabor/actions).
+**Última evidência de CI verificada nesta revisão:** execução #114, conclusão Success, commit `6f8dfa2463a3d1fa5037d4013060795666b4794e`. O job `validate` foi concluído com sucesso. Consulte [GitHub Actions](https://github.com/Lindelaine-maker/CasadoSabor/actions) para execuções posteriores.
 
 ## 7. Validação do ambiente publicado
 
