@@ -139,7 +139,7 @@ Na pasta `server`:
 
 O workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) utiliza Node.js 22 e PostgreSQL 16 para validar o schema Prisma, gerar o cliente, aplicar migrações e seed, verificar sintaxe, executar testes da API, executar o teste CRUD, compilar o front-end e auditar dependências de produção.
 
-O último resultado de CI registrado durante a preparação desta documentação foi **CI #107 — Success**, no commit `143aa1969cbceb7ef582a675084052f08becf7fd`. Consulte a aba Actions para o estado atual.
+Na última validação documental, a execução **CI #114 — Success** foi concluída no commit `6f8dfa2463a3d1fa5037d4013060795666b4794e`. Consulte a aba Actions para o estado atual.
 
 ## Publicação
 
