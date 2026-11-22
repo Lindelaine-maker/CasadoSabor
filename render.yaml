@@ -1,8 +1,9 @@
 databases:
   - name: casa-do-sabor-db
     plan: free
-    databaseName: casa_do_sabor
-    user: casa_do_sabor
+    region: singapore
+    databaseName: casa_do_sabor_db
+    user: casa_do_sabor_db_user
 
 services:
   - type: web
@@ -30,13 +31,12 @@ services:
   - type: web
     name: casa-do-sabor-web
     runtime: static
-    plan: free
     rootDir: client
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        value: https://casa-do-sabor-api.onrender.com/api
+        value: https://casa-do-sabor-api-qc80.onrender.com/api
     routes:
       - type: rewrite
         source: /*
