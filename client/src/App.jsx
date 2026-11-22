@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { api, setAdminToken } from './api';
 import { ChefHat, Plus, Pencil, Trash2, Utensils, Tags, Search, X, Leaf, Flame, Clock3 } from 'lucide-react';
 
