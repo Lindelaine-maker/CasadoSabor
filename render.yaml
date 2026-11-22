@@ -1,3 +1,9 @@
+databases:
+  - name: casa-do-sabor-db
+    plan: free
+    databaseName: casa_do_sabor
+    user: casa_do_sabor
+
 services:
   - type: web
     name: casa-do-sabor-api
@@ -9,7 +15,9 @@ services:
     healthCheckPath: /api/health
     envVars:
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: casa-do-sabor-db
+          property: connectionString
       - key: CLIENT_URL
         value: https://casa-do-sabor-web.onrender.com
       - key: ADMIN_USERNAME
