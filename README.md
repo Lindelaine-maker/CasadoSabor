@@ -1,8 +1,10 @@
-# Casa do Sabor — Cardápio Digital
+# Casa do Sabor
 
-Projeto acadêmico da disciplina **N695 — Desenvolvimento de Plataformas Web (Cenário 3)**.
+### Cardápio digital, simples e prático.
 
-O Casa do Sabor é uma aplicação web de cardápio digital. O público pode consultar as categorias e os pratos disponíveis; a administração autenticada pode cadastrar, consultar, editar e excluir categorias e pratos.
+O **Casa do Sabor** reúne o cardápio em uma experiência digital: os clientes consultam categorias e pratos e podem entrar em contato para fazer seus pedidos pelo WhatsApp. A equipe administrativa gerencia categorias e produtos em uma área protegida por autenticação.
+
+<p align="center">**Acesse o cardápio:** https://casa-do-sabor-web.onrender.com</p>
 
 ## Aplicação publicada
 
@@ -179,15 +181,6 @@ O Render fornece a variável `PORT`; a aplicação também possui a porta local 
 O Render está configurado para redirecionar rotas do front-end para `index.html`, permitindo o funcionamento da aplicação.
 
 Após a publicação, verifique o endpoint `/api/health`, abra o cardápio e teste o fluxo administrativo e as operações de cadastro, edição e exclusão.
-
-## Entrega acadêmica
-
-O relatório do projeto está disponível em PDF na pasta raiz do repositório. Antes do envio acadêmico:
-
-1. Confira se nome, matrícula e turma estão preenchidos corretamente no relatório.
-2. Inclua evidências reais da aplicação publicada e, quando solicitado, das requisições e respostas da API.
-3. Revise os links do repositório e da aplicação.
-4. Não inclua senhas, tokens, arquivos `.env` ou outros segredos nas evidências.
 
 ## Repositório
 
