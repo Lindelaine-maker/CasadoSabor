@@ -14,6 +14,7 @@ O Casa do Sabor permite que clientes consultem o cardápio e entrem em contato p
 - [Referência da API](docs/API.md)
 - [Instalação e publicação](docs/DEPLOYMENT.md)
 - [Operação, testes e manutenção](docs/OPERATIONS.md)
+- [Relatório técnico](docs/RELATORIO_TECNICO.md)
 
 ## Tecnologias
 
