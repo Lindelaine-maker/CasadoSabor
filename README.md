@@ -1,116 +1,119 @@
 # Casa do Sabor
 
-### Cardápio digital, simples e prático.
+**Cardápio digital para consulta pública e gestão administrativa de categorias e pratos.**
 
-O **Casa do Sabor** reúne o cardápio em uma experiência digital: os clientes consultam categorias e pratos e podem entrar em contato para fazer seus pedidos pelo WhatsApp. A equipe administrativa gerencia categorias e produtos em uma área protegida por autenticação.
+[**Acessar o cardápio**](https://casa-do-sabor-web.onrender.com) · [API](https://casa-do-sabor-api-qc80.onrender.com) · [Saúde da API](https://casa-do-sabor-api-qc80.onrender.com/api/health)
 
-<p align="center">**Acesse o cardápio:** https://casa-do-sabor-web.onrender.com</p>
+O Casa do Sabor permite que clientes consultem o cardápio e entrem em contato pelo WhatsApp. A equipe administra categorias e pratos por uma interface protegida por autenticação.
 
-## Aplicação publicada
+> A aplicação está publicada no Render. Serviços em planos gratuitos podem apresentar demora no primeiro acesso após períodos de inatividade.
 
-- **Cardápio:** https://casa-do-sabor-web.onrender.com
-- **API:** https://casa-do-sabor-api-qc80.onrender.com
-- **Verificação da API:** https://casa-do-sabor-api-qc80.onrender.com/api/health
+## Documentação
 
-> A disponibilidade dos serviços depende do provedor de hospedagem. Em planos gratuitos, o primeiro acesso após um período sem uso pode levar alguns instantes.
+- [Arquitetura e estrutura](docs/ARCHITECTURE.md)
+- [Referência da API](docs/API.md)
+- [Instalação e publicação](docs/DEPLOYMENT.md)
+- [Operação, testes e manutenção](docs/OPERATIONS.md)
 
 ## Tecnologias
 
-- **Front-end:** React 19 e Vite 6
-- **API:** Node.js 22 e Express 5
-- **Banco de dados:** PostgreSQL
-- **ORM e migrações:** Prisma 6
-- **Validação:** Zod
-- **Segurança:** Helmet, CORS configurável, limitação de requisições e autenticação administrativa com JWT
-- **Hospedagem:** Render
-- **Integração contínua:** GitHub Actions
+| Camada | Tecnologia |
+|---|---|
+| Front-end | React 19, Vite 6 |
+| API | Node.js 22, Express 5 |
+| Persistência | PostgreSQL |
+| ORM e migrações | Prisma 6 |
+| Validação | Zod |
+| Segurança | Helmet, CORS, express-rate-limit, JWT |
+| Hospedagem | Render |
+| CI | GitHub Actions |
 
 ## Funcionalidades
 
-- Consulta pública do cardápio por categorias e pratos.
-- Login para acesso administrativo.
+- Consulta pública de categorias e pratos.
+- Autenticação administrativa.
 - Cadastro, edição e exclusão de categorias.
 - Cadastro, edição e exclusão de pratos.
-- Proteção das rotas administrativas por token JWT.
-- Validação dos dados recebidos pela API.
-- Integração com WhatsApp para contato e pedidos.
+- Rotas administrativas protegidas por JWT.
+- Validação de entrada e tratamento padronizado de erros.
+- Link de contato/pedido via WhatsApp.
 
-**Regras de negócio:** nomes de categorias são únicos, os preços devem ser maiores que zero e a exclusão de uma categoria que ainda possui pratos é bloqueada pela API (HTTP 409).
+### Regras de negócio
 
-## Requisitos para execução local
+- O nome da categoria é obrigatório, tem entre 2 e 60 caracteres e é único.
+- O nome do prato é obrigatório e tem entre 2 e 80 caracteres.
+- A descrição do prato é opcional e aceita até 240 caracteres.
+- O preço deve ser numérico, finito e maior que zero.
+- Um prato pertence a uma categoria.
+- Não é permitido excluir uma categoria que ainda tenha pratos vinculados (HTTP 409).
+
+## Requisitos
 
 - Node.js 22 ou superior.
 - npm.
-- PostgreSQL em execução e um banco criado para o projeto.
+- PostgreSQL acessível.
+- Git.
 
-## Configuração e execução local
+## Execução local
 
-### 1. Configurar a API
+### 1. API
 
-No terminal, a partir da pasta raiz do repositório:
+Na raiz do repositório, crie o arquivo de ambiente:
 
-**Windows (PowerShell):**
-
+**PowerShell**
 ```powershell
 Copy-Item server/.env.example server/.env
 ```
 
-**Linux/macOS:**
-
+**Linux/macOS**
 ```bash
 cp server/.env.example server/.env
 ```
 
-Edite `server/.env` e informe os dados do PostgreSQL e credenciais administrativas próprias:
+Edite `server/.env`:
 
-- `DATABASE_URL`: endereço de conexão do banco PostgreSQL.
-- `PORT`: porta da API (localmente, o padrão é `3333`).
-- `CLIENT_URL`: endereço do front-end local, normalmente `http://localhost:5173`.
-- `ADMIN_USERNAME` e `ADMIN_PASSWORD`: usuário e senha administrativos.
+- `DATABASE_URL`: URL de conexão PostgreSQL.
+- `PORT`: porta HTTP (padrão local: `3333`).
+- `CLIENT_URL`: origem do front-end; múltiplas origens podem ser separadas por vírgula.
+- `ADMIN_USERNAME` e `ADMIN_PASSWORD`: credenciais administrativas.
 - `JWT_SECRET`: segredo aleatório com pelo menos 32 caracteres.
 
-Não publique o arquivo `.env`, senhas ou segredos no GitHub.
-
-Instale as dependências, gere o cliente Prisma, aplique as migrações, carregue os dados demonstrativos e execute os testes:
+Instale e prepare a API:
 
 ```bash
 cd server
 npm ci
 npx prisma generate
-npx prisma migrate dev --name init
+npx prisma migrate dev
 npm run seed
 npm test
 npm run test:db
 npm run dev
 ```
 
-O teste de integração `npm run test:db` exige que o PostgreSQL esteja acessível e que `DATABASE_URL` esteja configurada.
+O comando `npm run test:db` precisa de um PostgreSQL disponível e configurado em `DATABASE_URL`. A API local inicia, por padrão, em `http://localhost:3333`.
 
-A API ficará disponível em `http://localhost:3333` e o endpoint de saúde em `http://localhost:3333/api/health`.
+### 2. Front-end
 
-### 2. Configurar o front-end
+Em outro terminal, crie `client/.env`:
 
-Em outro terminal, a partir da pasta raiz:
-
-**Windows (PowerShell):**
-
+**PowerShell**
 ```powershell
 Copy-Item client/.env.example client/.env
 ```
 
-**Linux/macOS:**
-
+**Linux/macOS**
 ```bash
 cp client/.env.example client/.env
 ```
 
-O arquivo `client/.env` deve apontar para a API local:
+Confirme que contém:
 
 ```env
 VITE_API_URL=http://localhost:3333/api
 ```
 
-Instale as dependências e inicie o Vite:
+Instale e inicie:
 
 ```bash
 cd client
@@ -118,69 +121,41 @@ npm ci
 npm run dev
 ```
 
-Abra o endereço exibido pelo Vite (normalmente http://localhost:5173).
+Acesse o endereço informado pelo Vite (normalmente `http://localhost:5173`).
 
-## Autenticação administrativa
+## Autenticação
 
-O acesso administrativo é feito pela própria interface do cardápio. As credenciais são definidas no ambiente da API por meio de `ADMIN_USERNAME` e `ADMIN_PASSWORD`; não há credenciais padrão que devam ser publicadas neste repositório.
+A autenticação é feita por `POST /api/auth/login`. As credenciais são configuradas exclusivamente no ambiente da API. Em caso de sucesso, a API retorna um JWT com validade de 8 horas. As operações administrativas exigem `Authorization: Bearer <token>`.
 
-A autenticação utiliza `POST /api/auth/login`. Em caso de sucesso, a API retorna um token JWT com validade de 8 horas. As rotas de administração exigem esse token.
-
-## Endpoints principais
-
-| Método | Endpoint | Descrição |
-|---|---|---|
-| POST | `/api/auth/login` | Autenticação administrativa |
-| GET / POST | `/api/categories` | Listar e criar categorias |
-| GET / PUT / DELETE | `/api/categories/:id` | Consultar, editar e excluir categoria |
-| GET / POST | `/api/categories/:categoryId/dishes` | Listar e criar pratos de uma categoria |
-| GET / PUT / DELETE | `/api/dishes/:id` | Consultar, editar e excluir prato |
-| GET | `/api/health` | Verificar a saúde da API |
+Não existem credenciais padrão para publicar. Nunca versione arquivos `.env`, senhas, tokens ou segredos.
 
 ## Testes e integração contínua
 
-Na API:
+Na pasta `server`:
 
-- `npm test`: executa testes automatizados de autenticação, rotas HTTP, validação e tratamento de erros.
-- `npm run test:db`: executa um teste CRUD diretamente no PostgreSQL.
+- `npm test`: testes automatizados de autenticação, rotas HTTP, validação e tratamento de erros.
+- `npm run test:db`: teste CRUD de fumaça com PostgreSQL.
 
-O workflow do GitHub Actions, em `.github/workflows/ci.yml`, executa no Node.js 22 a validação e geração do Prisma, migrações e seed, verificação de sintaxe JavaScript, testes da API, teste CRUD com PostgreSQL, build do front-end e auditoria das dependências de produção. As quatro vulnerabilidades altas identificadas no relatório atual estão restritas a dependências de desenvolvimento do Prisma 6; não há vulnerabilidades altas ou críticas nas dependências de produção. A correção automática indicada pelo npm exige migração para Prisma 7 (mudança principal), portanto essa atualização deve ser feita separadamente, com validação de compatibilidade, e não aplicada sem testes.
+O workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) utiliza Node.js 22 e PostgreSQL 16 para validar o schema Prisma, gerar o cliente, aplicar migrações e seed, verificar sintaxe, executar testes da API, executar o teste CRUD, compilar o front-end e auditar dependências de produção.
 
-## Publicação no Render
+O último resultado de CI registrado durante a preparação desta documentação foi **CI #107 — Success**, no commit `143aa1969cbceb7ef582a675084052f08becf7fd`. Consulte a aba Actions para o estado atual.
 
-A configuração de infraestrutura está no arquivo `render.yaml`.
+## Publicação
 
-### Banco de dados
+A infraestrutura é descrita em [`render.yaml`](render.yaml). O arquivo define o PostgreSQL, a API e o front-end estático.
 
-O Blueprint define um banco PostgreSQL. A variável `DATABASE_URL` da API é vinculada à connection string desse banco.
+- API: raiz `server`; build `npm ci && npx prisma generate && npx prisma migrate deploy && npm run seed`; start `npm start`; health check `/api/health`.
+- Front-end: raiz `client`; build `npm ci && npm run build`; publicação de `dist`; variável `VITE_API_URL` apontando para a API com sufixo `/api`.
+- Segredos administrativos devem ser cadastrados manualmente no painel do Render.
 
-### API
+Consulte [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) antes de publicar ou alterar os serviços.
 
-- **Root Directory:** `server`
-- **Build Command:** `npm ci && npx prisma generate && npx prisma migrate deploy && npm run seed`
-- **Start Command:** `npm start`
-- **Health Check Path:** `/api/health`
+## Segurança e limitações conhecidas
 
-Variáveis de ambiente necessárias:
-
-- `DATABASE_URL`
-- `CLIENT_URL` — domínio público do front-end.
-- `ADMIN_USERNAME`
-- `ADMIN_PASSWORD`
-- `JWT_SECRET` — segredo aleatório forte, com pelo menos 32 caracteres.
-
-O Render fornece a variável `PORT`; a aplicação também possui a porta local padrão `3333`. O comando de build aplica as migrações e executa o seed. O seed utiliza operações idempotentes para carregar os dados demonstrativos.
-
-### Front-end
-
-- **Root Directory:** `client`
-- **Build Command:** `npm ci && npm run build`
-- **Publish Directory:** `dist`
-- **Variável de build:** `VITE_API_URL`, com a URL pública da API terminada em `/api`.
-
-O Render está configurado para redirecionar rotas do front-end para `index.html`, permitindo o funcionamento da aplicação.
-
-Após a publicação, verifique o endpoint `/api/health`, abra o cardápio e teste o fluxo administrativo e as operações de cadastro, edição e exclusão.
+- A API aplica Helmet, CORS configurável, limite de corpo JSON de 20 KB e rate limiting.
+- O login limita tentativas por IP e o JWT utiliza algoritmo HS256, emissor/audiência e expiração.
+- A auditoria registrada não apontou vulnerabilidades altas ou críticas nas dependências de produção. Foram observados alertas altos em dependências de desenvolvimento do ecossistema Prisma 6; uma atualização principal para Prisma 7 exige planejamento e testes de migração.
+- A persistência após reinício no ambiente Render e a configuração final dos segredos devem ser verificadas operacionalmente no painel/ambiente. Não considerar essas verificações concluídas apenas com o CI.
 
 ## Repositório
 
