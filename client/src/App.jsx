@@ -21,7 +21,7 @@ export default function App() {
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(Boolean(sessionStorage.getItem('casaDoSaborAdminToken')));
+  const [isAdmin, setIsAdmin] = useState(() => { try { return Boolean(window.sessionStorage.getItem('casaDoSaborAdminToken')); } catch { return false; } });
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
 
   async function loadCategories(preferredId) {
