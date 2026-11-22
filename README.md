@@ -141,10 +141,10 @@ A autenticação utiliza `POST /api/auth/login`. Em caso de sucesso, a API retor
 
 Na API:
 
-- `npm test`: executa os testes automatizados de autenticação.
-- `npm run test:db`: executa o teste de integração CRUD com PostgreSQL.
+- `npm test`: executa testes automatizados de autenticação, rotas HTTP, validação e tratamento de erros.
+- `npm run test:db`: executa um teste CRUD diretamente no PostgreSQL.
 
-O workflow do GitHub Actions, em `.github/workflows/ci.yml`, executa no Node.js 22 a validação e geração do Prisma, migrações e seed, verificação de sintaxe JavaScript, testes da API, teste CRUD com PostgreSQL, build do front-end e auditoria das dependências de produção.
+O workflow do GitHub Actions, em `.github/workflows/ci.yml`, executa no Node.js 22 a validação e geração do Prisma, migrações e seed, verificação de sintaxe JavaScript, testes da API, teste CRUD com PostgreSQL, build do front-end e auditoria das dependências de produção. As quatro vulnerabilidades altas identificadas no relatório atual estão restritas a dependências de desenvolvimento do Prisma 6; não há vulnerabilidades altas ou críticas nas dependências de produção. A correção automática indicada pelo npm exige migração para Prisma 7 (mudança principal), portanto essa atualização deve ser feita separadamente, com validação de compatibilidade, e não aplicada sem testes.
 
 ## Publicação no Render
 
