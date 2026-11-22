@@ -21,3 +21,5 @@ app.use('/api/categories',categoriesRouter);
 app.use('/api/dishes',dishesRouter);
 app.use(notFound);
 app.use(errorHandler);
+
+export default app;
