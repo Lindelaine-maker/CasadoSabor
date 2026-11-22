@@ -9,6 +9,8 @@ import authRouter from './routes/auth.js';
 import { notFound, errorHandler } from './middleware.js';
 
 const app = express();
+// Render executa a API atrás de um proxy reverso; confia no primeiro proxy.
+app.set('trust proxy', 1);
 app.use(helmet());
 app.use(cors({origin: process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(origin => origin.trim()) : 'http://localhost:5173'}));
 app.use(express.json({limit:'20kb'}));
