@@ -47,6 +47,16 @@ test('HTTP integration: category and dish CRUD, validation, auth and constraints
   categoryId = category.id;
   assert.equal(category.name, categoryName);
 
+  const getCategory = await fetch(`${base}/categories/${categoryId}`);
+  assert.equal(getCategory.status, 200);
+  assert.equal((await getCategory.json()).id, categoryId);
+
+  const updateCategory = await fetch(`${base}/categories/${categoryId}`, {
+    method: 'PUT', headers: auth, body: JSON.stringify({ name: `${categoryName} editada` }),
+  });
+  assert.equal(updateCategory.status, 200);
+  assert.equal((await updateCategory.json()).name, `${categoryName} editada`);
+
   const duplicate = await fetch(`${base}/categories`, {
     method: 'POST', headers: auth, body: JSON.stringify({ name: categoryName }),
   });
